@@ -1,0 +1,218 @@
+@import url('http://fonts.googleapis.com/css?family=Manrope');
+* {
+    font-family: Manrope;
+}
+body {
+    background-color: #04080C;
+}
+.chat-container {
+    max-width: 700px;
+    margin: 0 auto;
+    margin-bottom: 50px; /* Adjust this value based on the height of your button container */
+    transition: all .1s ease-in-out;
+}
+nav {
+    background-color: #131B23;
+    position: fixed;
+    height: 96%;
+    width: 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-radius: 10px;
+    margin-top: 1%;
+    margin-left: 1%;
+    border: 1px solid #2274A5; /* Added white border */
+    transition: all .1s ease-in-out;
+}
+nav:hover {
+    border: 1px solid #E9F1F7; /* Added white border */
+}
+nav .nav-btn {
+    display: block; /* Stack buttons vertically */
+    color: #944BBB; /* Changed icon color */
+    width: 100%; /* Full width */
+    margin: 20px 0; /* Add some space between buttons */
+    border-radius: 10px; /* Rounded borders similar to button container */
+    transition: all .1s ease-in-out;
+}
+nav .nav-btn:hover {
+    color: #E9F1F7;
+}
+svg {
+    display: fixed;
+    font-size: 1000%;
+    width: 100%;
+    height: 300px;
+    margin-top: 250px;
+    z-index: -1;
+    position: absolute;
+}
+.svg-container {
+    position: relative;
+}
+#svgText {
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+.text-copy {
+    fill: none;
+    stroke: white;
+    stroke-dasharray: 6% 29%;
+    stroke-width: 5px;
+    stroke-dashoffset: 0%;
+    animation: stroke-offset 5.5s infinite linear;
+}
+.text-copy:nth-child(1){
+  stroke: #131b23;
+  animation-delay: -1;
+}
+
+.text-copy:nth-child(2){
+  stroke: #E9F1F7;
+  animation-delay: -2s;
+}
+
+.text-copy:nth-child(3){
+  stroke: #AA7BC3;
+  animation-delay: -3s;
+}
+
+.text-copy:nth-child(4){
+  stroke: #944BBB;
+  animation-delay: -4s;
+}
+
+.text-copy:nth-child(5){
+  stroke: #2274A5;
+  animation-delay: -5s;
+}
+
+@keyframes stroke-offset{
+  100% {stroke-dashoffset: -35%;}
+}
+.low-opacity {
+    opacity: 0.2 !important;
+    transition: all .1s ease-in-out;
+}
+
+.high-opacity {
+    opacity: 1 !important;
+    transition: all .1s ease-in-out;
+}
+.user-text {
+    color: #E9F1F7;
+    text-align: left;
+    background-color: #131B23;
+    padding: 10px;
+    margin: 10px 0;
+    display: block;
+    border-radius: 10px;
+    border: 1px solid #E9F1F7; /* Add border */
+    transition: all .1s ease-in-out;
+  }
+.chatbot-text {
+    color: #E9F1F7;
+    text-align: left;
+    background-color: #131B23;
+    padding: 10px;
+    margin: 10px 0;
+    display: block;
+    border-radius: 10px;
+    border: 1px solid #E9F1F7; /* Add border */
+    transition: all .1s ease-in-out;
+  }
+.message-icon {
+    font-size: 24px;
+    margin-right: 8px;
+    float: left;
+    color: #944BBB; /* Changed icon color */
+    transition: all .1s ease-in-out;
+  }
+.button-container {
+    width: 700px;
+    display: flex;
+    justify-content: space-between;
+    position: absolute;
+    bottom: 3%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #131B23;
+    border: 1px solid #2274A5; /* Add white border around the button container */
+    border-radius: 10px; /* Add border radius */
+    box-sizing: border-box; /* Add box-sizing */
+    transition: all .1s ease-in-out;
+}
+.button-container:hover {
+    border-color: #E9F1F7;
+}
+.microphone-icon.recording > span {
+    color: red;
+    transition: all .1s ease-in-out;
+}
+.microphone-icon {
+    position: relative;
+    color: #944BBB; /* Changed icon color */
+    background-color: #131B23;
+    width: 48%;
+    margin: .2%;
+    float: left;
+    transition: all .1s ease-in-out;
+}
+.microphone-icon:hover > span {
+    color: #8B0000;
+    transition: all .1s ease-in-out;
+}
+.microphone-icon.recording:hover > span {
+    color: red;
+    transition: all .1s ease-in-out;
+}
+.microphone-icon:hover .record-text {
+    color: #2274A5;
+    transition: all .1s ease-in-out;
+}
+.remove-button {
+    position: relative;
+    color: #944BBB; /* Changed icon color */
+    background-color: #131B23;
+    width: 48%;
+    margin: .2%;
+    float: right;
+    transition: all .1s ease-in-out;
+}
+.remove-button:hover > span {
+    color: green;
+    transition: all .1s ease-in-out;
+  }
+.remove-button > span {
+    position: absolute;
+    right: 16px;
+    transition: all .1s ease-in-out;
+  }
+.record-text {
+    position: absolute;
+    left: 55%;
+    transform: translateX(-50%);
+    width: 80%;
+    text-align: center;
+    color:#E9F1F7;
+    transition: all .1s ease-in-out;
+}
+.remove-text {
+    position: absolute;
+    right: 55%;
+    transform: translateX(50%);
+    width: 80%;
+    text-align: center;
+    color:#E9F1F7;
+    transition: all .1s ease-in-out;
+}
+.remove-button:hover .remove-text {
+    color: #2274A5;
+    transition: all .1s ease-in-out;
+}
+.user-text, .chatbot-text {
+    z-index: 3;
+    transition: all .1s ease-in-out;
+}
