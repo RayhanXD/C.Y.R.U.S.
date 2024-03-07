@@ -7,12 +7,6 @@
     <link rel="stylesheet" href="/static/stylesheet.css">
     <title>Live Hand Gesture Recognition</title>
     <style>
-        img {
-            width: 100%;
-            margin-top: 100vh;
-            background-color: black;
-            border-color: white;
-        }
     </style>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/forms"></script>
@@ -20,155 +14,170 @@
 <link href="{{ url_for('static', filename='stylesheet.css') }}" rel="stylesheet">
     <nav>
     <ul>
-        <li><button class="nav-btn"><span class="material-icons">home</span></button></li>
-        <li><button class="nav-btn"><span class="material-icons">info</span></button></li>
-        <li><button class="nav-btn"><span class="material-icons">record_voice_over</span></button></li>
-        <li><button class="nav-btn"><span class="material-icons">videocam</span></button></li>
-        <li><button class="nav-btn"><span class="material-icons">settings</span></button></li>
+        <li><button onclick="location.href='#section_1'" class="nav-btn"><span class="material-icons">home</span></button></li>
+        <li><button onclick="location.href='#section_2'" class="nav-btn"><span class="material-icons">info</span></button></li>
+        <li><button onclick="location.href='#section_3'" class="nav-btn"><span class="material-icons">record_voice_over</span></button></li>
+        <li><button onclick="location.href='#section_4'" class="nav-btn"><span class="material-icons">videocam</span></button></li>
+        <li><button onclick="location.href='#section_5'" class="nav-btn"><span class="material-icons">settings</span></button></li>
     </ul>
     </nav>
-<div class="chat-container p-4">
-  <div id="chatOutput" class="space-y-2">
-    <!-- Chat messages will be appended here -->
-  </div>
-</div>
-<div class="button-container">
-  <button id="recordButton" class="microphone-icon py-2 px-4 rounded inline-flex">
-    <span class="material-icons">mic</span>
-    <div class="record-text">Press button to start recording</div>
-  </button>
-  <button id="removeButton" class="remove-button py-2 px-4 rounded inline-flex">
-    <span class="material-icons">refresh</span>
-    <div class="remove-text">Press button to refresh session</div>
-  </button>
-</div>
+    <div class="svg-container">
+        <svg id="svgText">
+          <symbol id="s-text">
+                <text text-anchor="middle" x="45%" y="50%">PROJECT</text>
+                <text text-anchor="middle" x="60%" y="95%">C.Y.R.U.S.</text>
+        </symbol>
+        
+          <g class = "g-ants">
+            <use xlink:href="#s-text" class="text-copy"></use>
+            <use xlink:href="#s-text" class="text-copy"></use>
+            <use xlink:href="#s-text" class="text-copy"></use>
+            <use xlink:href="#s-text" class="text-copy"></use>
+            <use xlink:href="#s-text" class="text-copy"></use>
+          </g>
+        </svg>
+    </div>
 
-<div class="svg-container">
-<svg id="svgText">
-  <symbol id="s-text">
-    <text text-anchor="middle" x="45%" y="50%">PROJECT</text>
-    <text text-anchor="middle" x="60%" y="95%">C.Y.R.U.S.</text>
-</symbol>
+<section id="section_1"></section>
+<section id="section_2"></section>
 
-  <g class = "g-ants">
-    <use xlink:href="#s-text" class="text-copy"></use>
-    <use xlink:href="#s-text" class="text-copy"></use>
-    <use xlink:href="#s-text" class="text-copy"></use>
-    <use xlink:href="#s-text" class="text-copy"></use>
-    <use xlink:href="#s-text" class="text-copy"></use>
-  </g>
-</svg>
-</div>
+<section id="section_3">
+    <div class="chat-container">
+        <div class="chat-messages">
+                <!-- Chat messages will be appended here -->
+        </div>
+        <div class="button-container">
+            <button id="recordButton" class="microphone-icon py-2 px-4 rounded inline-flex">
+                <span class="material-icons">mic</span>
+                <div class="record-text">Press button to start recording</div>
+            </button>
+            <button id="removeButton" class="remove-button py-2 px-4 rounded inline-flex">
+                <span class="material-icons">refresh</span>
+                <div class="remove-text">Press button to refresh session</div>
+            </button>
+        </div>
+    </div>
+</section>
+<section id="section_4">
+  <img src="http://127.0.0.1:8000/video_feed" alt="Video Stream loading" id="VideoStream">
+    <ul class="sidebar">
+      <li><button id="brectButton" class="videooptions"><span class="material-icons">crop_5_4</span></button></li>
+      <li><button id="infoText" class="videooptions"><span class="material-icons">feed</span></button></li>
+      <li><button id="drawPoint" class="videooptions"><span class="material-icons">timeline</span></button></li>
+      <li><button id="drawLine" class="videooptions"><span class="material-icons">ssid_chart</span></button></li>
+    </ul>
+</section>
+<section id="section_5"></section>
 <script src="https://cdn.socket.io/4.6.0/socket.io.min.js" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossorigin="anonymous"></script>
 <script>
-  let mediaRecorder;
-  let recordedChunks = [];
-
-  var socket = io.connect('http://' + document.domain + ':' + location.port);
-
-  socket.on('user_text', function(msg) {
-        console.log('Received user_text: ', msg.data);
-        const chatExchanges = document.querySelectorAll('.chat-exchange');
-        const lastExchange = chatExchanges[chatExchanges.length - 1];
-        const output = lastExchange.querySelector('.user-text');
-        output.innerHTML += msg.data + " ";
-        chatOutput.scrollTop = chatOutput.scrollHeight; // Added to scroll down to the latest message
-  });
+    let mediaRecorder;
+    let recordedChunks = [];
   
-  socket.on('chatbot_text', function(msg) {
-        console.log('Received chatbot_text: ', msg.data);
-        const chatExchanges = document.querySelectorAll('.chat-exchange');
-        const lastExchange = chatExchanges[chatExchanges.length - 1];
-        const output = lastExchange.querySelector('.chatbot-text');
-        output.innerHTML += msg.data;
-        chatOutput.scrollTop = chatOutput.scrollHeight; // Added to scroll down to the latest message
-
-  });
-
-  const recordButton = document.getElementById('recordButton');
-  const chatOutput = document.getElementById('chatOutput');
-  const removeButton = document.getElementById('removeButton');
-
-  var svgText = document.getElementById('svgText');
-
-  // Added event listener to the recordButton to start/stop recording when clicked
-  recordButton.addEventListener('click', function() {
-
-    if(mediaRecorder && mediaRecorder.state == 'recording') {
-    stopRecording();
-    recordButton.classList.remove('recording');
-    } else {
-    startRecording();
-    recordButton.classList.add('recording');
-  }
-  svgText.classList.remove('high-opacity');
-  svgText.classList.add('low-opacity');
-  });
-
-  removeButton.addEventListener('click', function()
-  {
-    removeAllDivs();
-    svgText.classList.remove('low-opacity');
-    svgText.classList.add('high-opacity');
-});
+    var socket = io.connect('http://' + document.domain + ':' + location.port);
   
-  function startRecording() {
-    recordedChunks = [];
-    addUserDiv();
-
-    navigator.mediaDevices.getUserMedia({ audio: true })
-    .then(stream => {
-        mediaRecorder = new MediaRecorder(stream);
-        mediaRecorder.start();
-        mediaRecorder.addEventListener('dataavailable', function(e) {
-            recordedChunks.push(e.data);
-        });
+    socket.on('user_text', function(msg) {
+          console.log('Received user_text: ', msg.data);
+          const chatExchanges = document.querySelectorAll('.chat-exchange');
+          const lastExchange = chatExchanges[chatExchanges.length - 1];
+          const output = lastExchange.querySelector('.user-text');
+          output.innerHTML += msg.data + " ";
+          chatOutput.scrollTop = chatOutput.scrollHeight; // Added to scroll down to the latest message
     });
-  }
-  function stopRecording() {
-    addChatbotDiv();
-    mediaRecorder.addEventListener('stop', function() {
-        const audioBlob = new Blob(recordedChunks);
-        const formData = new FormData();
-        formData.append('file', audioBlob);
-        fetch('/upload', {
-            method:'POST',
-            body: formData
-        })
-        .then(data => {
-            //addPlaceholderDivs();
-        })
+    
+    socket.on('chatbot_text', function(msg) {
+          console.log('Received chatbot_text: ', msg.data);
+          const chatExchanges = document.querySelectorAll('.chat-exchange');
+          const lastExchange = chatExchanges[chatExchanges.length - 1];
+          const output = lastExchange.querySelector('.chatbot-text');
+          output.innerHTML += msg.data;
+          chatOutput.scrollTop = chatOutput.scrollHeight; // Added to scroll down to the latest message
+  
     });
-    mediaRecorder.stop();
-  }
-
-  function addUserDiv() {
-    const messageDiv = document.createElement('div');
-    messageDiv.className = 'message chat-exchange';
-
-    const userDiv = document.createElement('div');
-    userDiv.className = 'user-text';
-    userDiv.textContent = 'User: ';
-    const userIcon = document.createElement('span');
-    userIcon.className = 'material-icons message-icon';
-    userIcon.textContent = 'account_circle';
-    userDiv.appendChild(userIcon);
-    messageDiv.appendChild(userDiv);
-
-    chatOutput.appendChild(messageDiv);
-    chatOutput.scrollTop = chatOutput.scrollHeight; // Added to scroll down to the latest message
-  }
-
-  function addChatbotDiv() {
-    const chatExchanges = document.querySelectorAll('.chat-exchange');
-    const lastExchange = chatExchanges[chatExchanges.length - 1];
-
-    const chatbotDiv = document.createElement('div');
-    chatbotDiv.className = 'chatbot-text';
-    chatbotDiv.textContent = 'Chatbot: ';
-    const chatbotIcon = document.createElement('span');
-    chatbotIcon.className = 'material-icons message-icon';
-    chatbotIcon.textContent = 'chat';
+  
+    const recordButton = document.getElementById('recordButton');
+    const chatOutput = document.querySelector('.chat-messages'); // Updated to select the new chat-messages div
+    const removeButton = document.getElementById('removeButton');
+  
+    var svgText = document.getElementById('svgText');
+  
+    // Added event listener to the recordButton to start/stop recording when clicked
+    recordButton.addEventListener('click', function() {
+  
+      if(mediaRecorder && mediaRecorder.state == 'recording') {
+      stopRecording();
+      recordButton.classList.remove('recording');
+      } else {
+      startRecording();
+      recordButton.classList.add('recording');
+    }
+    svgText.classList.remove('high-opacity');
+    svgText.classList.add('low-opacity');
+    });
+  
+    removeButton.addEventListener('click', function()
+    {
+      removeAllDivs();
+      svgText.classList.remove('low-opacity');
+      svgText.classList.add('high-opacity');
+  });
+    
+    function startRecording() {
+      recordedChunks = [];
+      addUserDiv();
+  
+      navigator.mediaDevices.getUserMedia({ audio: true })
+      .then(stream => {
+          mediaRecorder = new MediaRecorder(stream);
+          mediaRecorder.start();
+          mediaRecorder.addEventListener('dataavailable', function(e) {
+              recordedChunks.push(e.data);
+          });
+      });
+    }
+    function stopRecording() {
+      addChatbotDiv();
+      mediaRecorder.addEventListener('stop', function() {
+          const audioBlob = new Blob(recordedChunks);
+          const formData = new FormData();
+          formData.append('file', audioBlob);
+          fetch('/upload', {
+              method:'POST',
+              body: formData
+          })
+          .then(data => {
+              //addPlaceholderDivs();
+          })
+      });
+      mediaRecorder.stop();
+    }
+  
+    function addUserDiv() {
+      const messageDiv = document.createElement('div');
+      messageDiv.className = 'message chat-exchange';
+  
+      const userDiv = document.createElement('div');
+      userDiv.className = 'user-text';
+      userDiv.textContent = 'User: ';
+      const userIcon = document.createElement('span');
+      userIcon.className = 'material-icons message-icon';
+      userIcon.textContent = 'account_circle';
+      userDiv.appendChild(userIcon);
+      messageDiv.appendChild(userDiv);
+  
+      chatOutput.appendChild(messageDiv);
+      chatOutput.scrollTop = chatOutput.scrollHeight; // Added to scroll down to the latest message
+    }
+  
+    function addChatbotDiv() {
+      const chatExchanges = document.querySelectorAll('.chat-exchange');
+      const lastExchange = chatExchanges[chatExchanges.length - 1];
+  
+      const chatbotDiv = document.createElement('div');
+      chatbotDiv.className = 'chatbot-text';
+      chatbotDiv.textContent = 'Chatbot: ';
+      const chatbotIcon = document.createElement('span');
+      chatbotIcon.className = 'material-icons message-icon';
+      chatbotIcon.textContent = 'chat';
     chatbotDiv.appendChild(chatbotIcon);
     lastExchange.appendChild(chatbotDiv);
 
@@ -182,6 +191,61 @@
   setTimeout(() => {
   chatOutput.scrollTop = chatOutput.scrollHeight;
 }, 0);
+
+let showBrect = false;
+
+const brectButton = document.getElementById('brectButton');
+brectButton.addEventListener('click', function() {
+    showBrect = !showBrect;
+    fetch('/update_showBrect', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `showBrect=${showBrect}`,
+    });
+});
+
+let showInfo = false;
+
+const infoButton = document.getElementById('infoText');
+infoButton.addEventListener('click', function() {
+    showInfo = !showInfo;
+    fetch('/update_showInfo', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `showInfo=${showInfo}`,
+    });
+});
+
+let drawPoint = true;
+
+const drawPoints = document.getElementById('drawPoint');
+drawPoints.addEventListener('click', function() {
+    drawPoint = !drawPoint;
+    fetch('/update_drawPoint', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `drawPoint=${drawPoint}`,
+    });
+});
+
+let drawLine = false;
+
+const drawLines = document.getElementById('drawLine');
+drawLines.addEventListener('click', function() {
+    drawLine = !drawLine;
+    fetch('/update_drawLine', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `drawLine=${drawLine}`,
+    });
+});
 </script>
-    <img src="http://127.0.0.1:8000/video_feed" alt="Video Stream loading">
 </html>

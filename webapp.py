@@ -5,7 +5,7 @@ import requests
 from openai import OpenAI
 import os
 import cv2 as cv
-from app import process_frame
+from app import process_frame, showBrect, showInfo, drawLine, drawPoint
 
 app = Flask(__name__)
 
@@ -15,7 +15,7 @@ def generate():
         ret, frame = cap.read()
         if not ret:
             break
-        frame = process_frame(frame)
+        frame = process_frame(frame, showBrect, showInfo, drawPoint, drawLine)
         (flag, encodedImage) = cv.imencode(".jpg", frame)
         if not flag:
             continue
@@ -67,10 +67,10 @@ def upload():
                 "content": transcript["text"]
             }
         ],
-        max_tokens=300,
+        max_tokens=1000,
         stream=True
     )
-    
+
     socketio.emit('user_text', {'data': transcript['text']})
 
     for chunk in chat_response:
@@ -79,6 +79,30 @@ def upload():
             socketio.emit('chatbot_text', {'data': chunk.choices[0].delta.content})
 
     return '', 200
+
+@app.route('/update_showBrect', methods=['POST'])
+def update_showBrect():
+    global showBrect
+    showBrect = request.form.get('showBrect') == 'true'
+    return "Brect Shown Toggled"
+
+@app.route('/update_showInfo', methods=['POST'])
+def update_showInfo():
+    global showInfo
+    showInfo = request.form.get('showInfo') == 'true'
+    return "Info Shown Toggled"
+
+@app.route('/update_drawPoint', methods=['POST'])
+def update_drawPoint():
+    global drawPoint
+    drawPoint = (request.form.get('drawPoint') == 'true')
+    return "Points Toggled"
+
+@app.route('/update_drawLine', methods=['POST'])
+def update_drawLine():
+    global drawLine
+    drawLine = (request.form.get('drawLine') == 'true')
+    return "Lines Toggled"
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8000, debug=True)

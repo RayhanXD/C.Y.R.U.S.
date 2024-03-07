@@ -3,6 +3,8 @@ from lightbars import *
 from app import *
 import threading
 from threading import Lock
+import requests
+import json
 
 last_time_called = 0
 last_time_light_called = 0
@@ -50,7 +52,7 @@ def function_for_gesture_4():
         is_light_thread_running = True
         thread = threading.Thread(target=check_light_time, args=(set_color,))
         thread.start()
-    
+
 def function_for_gesture_open():
     check_time_and_print("Gesture = Open")
 
@@ -59,6 +61,7 @@ def function_for_gesture_5():
 
 def function_for_thumbsup():
     check_time_and_print('Gesture = Thumbs Up')
+
 
 hand_sign_functions = {
     0: function_for_gesture_open,
@@ -69,7 +72,6 @@ hand_sign_functions = {
     5: function_for_gesture_5,
     6: function_for_thumbsup
 }
-
 
 #FINGER GESTURE FUNCTIONS
 

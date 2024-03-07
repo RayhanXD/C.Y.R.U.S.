@@ -34,11 +34,15 @@ history_length = 16
 point_history = deque(maxlen=history_length)
 finger_gesture_history = deque(maxlen=history_length)
 mode = 0
+showBrect = False
+showInfo = False
+drawPoint = True
+drawLine = True
 
-def process_frame(input_frame, use_static_image_mode=False, min_detection_confidence=0.8, min_tracking_confidence=0.5):
+def process_frame(input_frame, showBrect, showInfo, drawPoint, drawLine, use_static_image_mode=False, min_detection_confidence=0.8, min_tracking_confidence=0.5):
     global mp_hands_instance, keypoint_classifier_instance, point_history_classifier_instance, cvFpsCalc_instance
     global point_history, finger_gesture_history, mode
-    
+
     if mp_hands_instance is None:
         mp_hands_instance = mp.solutions.hands.Hands(static_image_mode=use_static_image_mode, max_num_hands=6, min_detection_confidence=min_detection_confidence, min_tracking_confidence=min_tracking_confidence)
         keypoint_classifier_instance = KeyPointClassifier()
@@ -90,15 +94,13 @@ def process_frame(input_frame, use_static_image_mode=False, min_detection_confid
                 # Convert finger_gesture_id to int before the lookup
                 finger_gesture_id = int(finger_gesture_id)
 
-                if finger_gesture_id in finger_gesture_functions:
-                    finger_gesture_functions[finger_gesture_id]()
-
             # print("Finger Gesture ID:", finger_gesture_id, type(finger_gesture_id))
             # print("Dictionary keys:", finger_gesture_functions.keys())
 
-            final_image = draw_bounding_rect(True, final_image, brect)
-            final_image = draw_landmarks(final_image, landmark_list)
-            final_image = draw_info_text(final_image, brect, handedness, keypoint_classifier_labels[hand_sign_id], point_history_classifier_labels[most_common_fg_id[0][0]])
+            final_image = draw_bounding_rect(showBrect, final_image, brect)
+            final_image = draw_landmarks(final_image, landmark_list, drawPoint, drawLine)
+            final_image = draw_info_text(final_image, showInfo, brect, handedness, keypoint_classifier_labels[hand_sign_id], point_history_classifier_labels[most_common_fg_id[0][0]])
+
     else:
         point_history.append([0, 0])
 
