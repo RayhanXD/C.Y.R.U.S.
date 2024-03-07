@@ -8,12 +8,24 @@ C.Y.R.U.S. is a comprehensive project that includes various components such as k
 - [Usage](#usage)
 - [Contributing](#contributing)
 - [License](#license)
+- [Codebase Overview](#codebase-overview)
+- [Contact](#contact)
 
 ## Installation
 
-The project uses Python and its associated libraries. To install the project, clone the repository and install the necessary dependencies.
+The project uses Python and its associated libraries. To install the project, clone the repository and install the necessary dependencies using the following command:
+
+\`\`\`bash
+pip install -r requirements.txt
+\`\`\`
 
 ## Usage
+
+To run the project, use the following command:
+
+\`\`\`bash
+python webapp.py
+\`\`\`
 
 The project includes a keypoint classification model, which is used for hand gesture recognition. The model is trained and evaluated in Jupyter notebooks (`keypoint_classification.ipynb` and `keypoint_classification_EN.ipynb`).
 
