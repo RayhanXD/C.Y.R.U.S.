@@ -1,0 +1,15 @@
+csv==1.0
+copy==3.5
+argparse==1.4.0
+collections-extended==1.0.3
+opencv-python==4.5.3.56
+mediapipe==0.8.7.3
+numpy==1.21.2
+tensorflow==2.6.0
+scikit-learn==0.24.2
+requests==2.26.0
+os==0.1.1
+flask==2.0.1
+flask-socketio==5.1.1
+python-dotenv==0.19.1
+openai==0.27.0
