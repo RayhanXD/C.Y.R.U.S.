@@ -87,6 +87,32 @@ svg {
 @keyframes stroke-offset{
   100% {stroke-dashoffset: -35%;}
 }
+.grid-container {
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-template-rows: auto auto;
+    /* border: 1px solid white; */
+    width: 99.5vw;
+    height: 100vh;
+    float: right;
+}
+#section_1 .grid-item {
+    width: auto;
+    height: auto;
+    background-color: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.content {
+    background-color: white;
+    width: 600px;
+    height: 350px;
+    z-index: 5000;
+}
+#left {
+    margin-right: 10px;
+}
 .low-opacity {
     opacity: 0.2 !important;
     transition: all .1s ease-in-out;
@@ -150,7 +176,14 @@ svg {
 .button-container:hover {
     border-color: #E9F1F7;
 }
+#cyrusButton {
+    color: #944BBB;
+}
 .microphone-icon.recording > span {
+    color: red;
+    transition: all .1s ease-in-out;
+}
+.voiceoptions.recording > span {
     color: red;
     transition: all .1s ease-in-out;
 }
@@ -224,7 +257,10 @@ svg {
 }
 section {
     height: 100vh;
-    border: 1px solid white;
+    /* border: 1px solid white; */
+}
+#section_3 {
+    position: relative;
 }
 #VideoStream {
     position: absolute; /* Add this line */
@@ -266,6 +302,40 @@ section {
 .sidebar .videooptions:hover {
     color: #E9F1F7;
 }
+.cyrusbar {
+    background-color: #131B23;
+    position: absolute; /* Change from absolute to relative */
+    top: 50%;
+    right: 0;
+    height: auto;
+    width: 50px;
+    z-index: 10;
+    float: right;
+    display: flex;
+    transform: translateY(-50%);
+    flex-direction: column;
+    justify-content: center;
+    border-radius: 10px;
+    margin-right: 1%;
+    border: 1px solid #2274A5; /* Added white border */
+    transition: all .1s ease-in-out;
+}
+.cyrusbar:hover {
+    border: 1px solid #E9F1F7; /* Added white border */
+}
+.cyrusbar .voiceoptions {
+    display: block; /* Stack buttons vertically */
+    color: #944BBB; /* Changed icon color */
+    width: 100%; /* Full width */
+    border-radius: 10px; /* Rounded borders similar to button container */
+    transition: all .1s ease-in-out;
+    margin-top: 12.5px;
+    margin-bottom: 7.5px;
+}
+.cyrusbar .voiceoptions:hover {
+    color: #E9F1F7;
+}
+
 .chat-messages {
     flex-grow: 1;
     overflow-y: auto; /* Allow scrolling for overflow content */

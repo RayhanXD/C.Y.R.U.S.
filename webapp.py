@@ -1,6 +1,7 @@
 from flask import Flask, Response, request, render_template
 from flask_socketio import SocketIO
 from dotenv import load_dotenv
+from cyrus import *
 import requests
 from openai import OpenAI
 import os
@@ -60,7 +61,7 @@ def upload():
         messages=[
             {
                 "role": "system",
-                "content": "You are a helpful assistant."
+                "content": "C.Y.R.U.S. (Cybernetic Responsive Utility System) is an advanced AI assistant designed to optimize both personal and professional tasks through its powerful, multifunctional capabilities. It excels in data analysis, offering detailed insights to aid in decision-making, automates routine tasks to enhance productivity, and manages real-time communication across diverse platforms to ensure seamless collaboration. Additionally, C.Y.R.U.S. integrates robust security features to monitor and protect against both digital and physical threats, making it an indispensable tool for modern, efficient operations."
             },
             {
                 "role": "user",
@@ -72,11 +73,33 @@ def upload():
     )
 
     socketio.emit('user_text', {'data': transcript['text']})
+    # voice(chat_response, False)
+
+    lolol = ""
 
     for chunk in chat_response:
         if chunk.choices[0].delta.content is not None:
-            print(chunk.choices[0].delta.content)
             socketio.emit('chatbot_text', {'data': chunk.choices[0].delta.content})
+
+    return '', 200
+
+@app.route('/cyrus', methods=['POST'])
+def cyrus():
+    audio_file = request.files['file']
+    audio_file.save('audio.webm')
+
+    with open('audio.webm', 'rb') as f:
+        response = requests.post(
+            "https://api.openai.com/v1/audio/transcriptions",
+            headers={"Authorization": f"Bearer {api_key}"},
+            files={"file": f},
+            data={"model": "whisper-1"}
+        )
+    transcript = response.json()
+    socketio.emit('user_text', {'data': transcript['text']})
+    
+    feedback = execute_command(transcript)
+    socketio.emit('chatbot_text', {'data': feedback})
 
     return '', 200
 

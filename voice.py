@@ -1,16 +1,30 @@
 from openai import OpenAI
 from playsound import playsound
-import warnings
-
-warnings.filterwarnings("ignore", message="Due to a bug, this method doesn't actually stream the response content")
 
 client = OpenAI()
 
-def voice(input):
+counter = 0
+strings = ['Of course, Rayhan, ', 'Okay, Rayhan, ', '']
+
+def cycle_strings():
+    global counter
+    result = strings[counter % len(strings)]
+    counter += 1
+    return result
+
+embed = True
+
+def voice(input, embed):
+
+    if embed:
+        input = cycle_strings() + input
+    else:
+        input = input
+
     response = client.audio.speech.create(
         model="tts-1",
-        voice="alloy",
-        input=input,
+        voice="nova",
+        input= input,
     )
 
     response.stream_to_file("output.mp3")

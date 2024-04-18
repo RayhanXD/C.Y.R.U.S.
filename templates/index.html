@@ -38,7 +38,22 @@
         </svg>
     </div>
 
-<section id="section_1"></section>
+<section id="section_1">
+    <div class="grid-container">
+        <div class="grid-item">
+            <div class="content" id="left">hi lol</div>
+        </div>
+        <div class="grid-item">
+            <div class="content" id="right">hi lol part two</div>
+        </div>
+        <div class="grid-item">
+            <div class="content" id="left">hi lol part 3</div>
+        </div>
+        <div class="grid-item">
+            <div class="content" id="right">hi lol part 4</div>
+        </div>
+    </div>
+</section>
 <section id="section_2"></section>
 
 <section id="section_3">
@@ -57,9 +72,12 @@
             </button>
         </div>
     </div>
+    <ul class="cyrusbar">
+        <li><button id="cyrusbutton" class="voiceoptions"><span class="material-icons">smart_toy</span></button></li>
+    </ul>
 </section>
 <section id="section_4">
-  <img src="http://127.0.0.1:8000/video_feed" alt="Video Stream loading" id="VideoStream">
+  <img src="http://127.0.0.1:8000/video_feed" alt="Video Stream loading" id="VideoStream" class="Video">
     <ul class="sidebar">
       <li><button id="brectButton" class="videooptions"><span class="material-icons">crop_5_4</span></button></li>
       <li><button id="infoText" class="videooptions"><span class="material-icons">feed</span></button></li>
@@ -70,182 +88,245 @@
 <section id="section_5"></section>
 <script src="https://cdn.socket.io/4.6.0/socket.io.min.js" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossorigin="anonymous"></script>
 <script>
-    let mediaRecorder;
-    let recordedChunks = [];
-  
-    var socket = io.connect('http://' + document.domain + ':' + location.port);
-  
-    socket.on('user_text', function(msg) {
-          console.log('Received user_text: ', msg.data);
-          const chatExchanges = document.querySelectorAll('.chat-exchange');
-          const lastExchange = chatExchanges[chatExchanges.length - 1];
-          const output = lastExchange.querySelector('.user-text');
-          output.innerHTML += msg.data + " ";
-          chatOutput.scrollTop = chatOutput.scrollHeight; // Added to scroll down to the latest message
-    });
-    
-    socket.on('chatbot_text', function(msg) {
-          console.log('Received chatbot_text: ', msg.data);
-          const chatExchanges = document.querySelectorAll('.chat-exchange');
-          const lastExchange = chatExchanges[chatExchanges.length - 1];
-          const output = lastExchange.querySelector('.chatbot-text');
-          output.innerHTML += msg.data;
-          chatOutput.scrollTop = chatOutput.scrollHeight; // Added to scroll down to the latest message
-  
-    });
-  
-    const recordButton = document.getElementById('recordButton');
-    const chatOutput = document.querySelector('.chat-messages'); // Updated to select the new chat-messages div
-    const removeButton = document.getElementById('removeButton');
-  
-    var svgText = document.getElementById('svgText');
-  
-    // Added event listener to the recordButton to start/stop recording when clicked
-    recordButton.addEventListener('click', function() {
-  
-      if(mediaRecorder && mediaRecorder.state == 'recording') {
-      stopRecording();
-      recordButton.classList.remove('recording');
-      } else {
-      startRecording();
-      recordButton.classList.add('recording');
-    }
-    svgText.classList.remove('high-opacity');
-    svgText.classList.add('low-opacity');
-    });
-  
-    removeButton.addEventListener('click', function()
-    {
-      removeAllDivs();
-      svgText.classList.remove('low-opacity');
-      svgText.classList.add('high-opacity');
-  });
-    
-    function startRecording() {
-      recordedChunks = [];
-      addUserDiv();
-  
-      navigator.mediaDevices.getUserMedia({ audio: true })
-      .then(stream => {
-          mediaRecorder = new MediaRecorder(stream);
-          mediaRecorder.start();
-          mediaRecorder.addEventListener('dataavailable', function(e) {
-              recordedChunks.push(e.data);
-          });
-      });
-    }
-    function stopRecording() {
-      addChatbotDiv();
-      mediaRecorder.addEventListener('stop', function() {
-          const audioBlob = new Blob(recordedChunks);
-          const formData = new FormData();
-          formData.append('file', audioBlob);
-          fetch('/upload', {
-              method:'POST',
-              body: formData
-          })
-          .then(data => {
-              //addPlaceholderDivs();
-          })
-      });
-      mediaRecorder.stop();
-    }
-  
-    function addUserDiv() {
-      const messageDiv = document.createElement('div');
-      messageDiv.className = 'message chat-exchange';
-  
-      const userDiv = document.createElement('div');
-      userDiv.className = 'user-text';
-      userDiv.textContent = 'User: ';
-      const userIcon = document.createElement('span');
-      userIcon.className = 'material-icons message-icon';
-      userIcon.textContent = 'account_circle';
-      userDiv.appendChild(userIcon);
-      messageDiv.appendChild(userDiv);
-  
-      chatOutput.appendChild(messageDiv);
-      chatOutput.scrollTop = chatOutput.scrollHeight; // Added to scroll down to the latest message
-    }
-  
-    function addChatbotDiv() {
-      const chatExchanges = document.querySelectorAll('.chat-exchange');
-      const lastExchange = chatExchanges[chatExchanges.length - 1];
-  
-      const chatbotDiv = document.createElement('div');
-      chatbotDiv.className = 'chatbot-text';
-      chatbotDiv.textContent = 'Chatbot: ';
-      const chatbotIcon = document.createElement('span');
-      chatbotIcon.className = 'material-icons message-icon';
-      chatbotIcon.textContent = 'chat';
-    chatbotDiv.appendChild(chatbotIcon);
-    lastExchange.appendChild(chatbotDiv);
+let mediaRecorder;
+let recordedChunks = [];
 
+var socket = io.connect('http://' + document.domain + ':' + location.port);
+
+socket.on('user_text', function(msg) {
+        console.log('Received user_text: ', msg.data);
+        const chatExchanges = document.querySelectorAll('.chat-exchange');
+        const lastExchange = chatExchanges[chatExchanges.length - 1];
+        const output = lastExchange.querySelector('.user-text');
+        output.innerHTML += msg.data + " ";
+        chatOutput.scrollTop = chatOutput.scrollHeight; // Added to scroll down to the latest message
+});
+
+socket.on('chatbot_text', function(msg) {
+        console.log('Received chatbot_text: ', msg.data);
+        const chatExchanges = document.querySelectorAll('.chat-exchange');
+        const lastExchange = chatExchanges[chatExchanges.length - 1];
+        const output = lastExchange.querySelector('.chatbot-text');
+        output.innerHTML += msg.data;
+        chatOutput.scrollTop = chatOutput.scrollHeight; // Added to scroll down to the latest message
+
+});
+
+const recordButton = document.getElementById('recordButton');
+const chatOutput = document.querySelector('.chat-messages'); // Updated to select the new chat-messages div
+const removeButton = document.getElementById('removeButton');
+
+var svgText = document.getElementById('svgText');
+
+// Added event listener to the recordButton to start/stop recording when clicked
+recordButton.addEventListener('click', function() {
+
+    if(mediaRecorder && mediaRecorder.state == 'recording') {
+    stopRecording();
+    recordButton.classList.remove('recording');
+    } else {
+    startRecording();
+    recordButton.classList.add('recording');
+}
+svgText.classList.remove('high-opacity');
+svgText.classList.add('low-opacity');
+});
+
+removeButton.addEventListener('click', function()
+{
+    removeAllDivs();
+    svgText.classList.remove('low-opacity');
+    svgText.classList.add('high-opacity');
+});
+
+function startRecording() {
+    recordedChunks = [];
+    addUserDiv();
+
+    navigator.mediaDevices.getUserMedia({ audio: true })
+    .then(stream => {
+        mediaRecorder = new MediaRecorder(stream);
+        mediaRecorder.start();
+        mediaRecorder.addEventListener('dataavailable', function(e) {
+            recordedChunks.push(e.data);
+        });
+    });
+}
+function stopRecording() {
+    addChatbotDiv();
+    mediaRecorder.addEventListener('stop', function() {
+        const audioBlob = new Blob(recordedChunks);
+        const formData = new FormData();
+        formData.append('file', audioBlob);
+        fetch('/upload', {
+            method:'POST',
+            body: formData
+        })
+        .then(data => {
+            //addPlaceholderDivs();
+        })
+    });
+    mediaRecorder.stop();
+}
+
+function stopCyrusRecording() {
+    addChatbotDiv();
+    mediaRecorder.addEventListener('stop', function() {
+        const audioBlob = new Blob(recordedChunks);
+        const formData = new FormData();
+        formData.append('file', audioBlob);
+        fetch('/cyrus', {
+            method:'POST',
+            body: formData
+        })
+        .then(data => {
+            //addPlaceholderDivs();
+        })
+    });
+    mediaRecorder.stop();
+}
+
+function addUserDiv() {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = 'message chat-exchange';
+
+    const userDiv = document.createElement('div');
+    userDiv.className = 'user-text';
+    userDiv.textContent = 'User: ';
+    const userIcon = document.createElement('span');
+    userIcon.className = 'material-icons message-icon';
+    userIcon.textContent = 'account_circle';
+    userDiv.appendChild(userIcon);
+    messageDiv.appendChild(userDiv);
+
+    chatOutput.appendChild(messageDiv);
     chatOutput.scrollTop = chatOutput.scrollHeight; // Added to scroll down to the latest message
-  }
+}
 
-  function removeAllDivs() {
-    const messageDivs = document.querySelectorAll('.message');
-    messageDivs.forEach(div => div.remove());
-  }
-  setTimeout(() => {
-  chatOutput.scrollTop = chatOutput.scrollHeight;
+function addChatbotDiv() {
+    const chatExchanges = document.querySelectorAll('.chat-exchange');
+    const lastExchange = chatExchanges[chatExchanges.length - 1];
+
+    const chatbotDiv = document.createElement('div');
+    chatbotDiv.className = 'chatbot-text';
+    chatbotDiv.textContent = 'Chatbot: ';
+    const chatbotIcon = document.createElement('span');
+    chatbotIcon.className = 'material-icons message-icon';
+    chatbotIcon.textContent = 'chat';
+chatbotDiv.appendChild(chatbotIcon);
+lastExchange.appendChild(chatbotDiv);
+
+chatOutput.scrollTop = chatOutput.scrollHeight; // Added to scroll down to the latest message
+}
+
+function removeAllDivs() {
+const messageDivs = document.querySelectorAll('.message');
+messageDivs.forEach(div => div.remove());
+}
+setTimeout(() => {
+chatOutput.scrollTop = chatOutput.scrollHeight;
 }, 0);
+
+//cyrus record button 
+
+const cyrusButton = document.getElementById('cyrusbutton');
+
+cyrusButton.addEventListener('click', function() {
+if(mediaRecorder && mediaRecorder.state == 'recording') {
+    stopCyrusRecording();
+    cyrusButton.classList.remove('recording');
+} else {
+    startRecording();
+    cyrusButton.classList.add('recording');
+}
+svgText.classList.remove('high-opacity');
+svgText.classList.add('low-opacity');
+});
+
+//VIDEO OPTIONS
 
 let showBrect = false;
 
 const brectButton = document.getElementById('brectButton');
 brectButton.addEventListener('click', function() {
-    showBrect = !showBrect;
-    fetch('/update_showBrect', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: `showBrect=${showBrect}`,
-    });
+showBrect = !showBrect;
+fetch('/update_showBrect', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: `showBrect=${showBrect}`,
+});
 });
 
 let showInfo = false;
 
 const infoButton = document.getElementById('infoText');
 infoButton.addEventListener('click', function() {
-    showInfo = !showInfo;
-    fetch('/update_showInfo', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: `showInfo=${showInfo}`,
-    });
+showInfo = !showInfo;
+fetch('/update_showInfo', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: `showInfo=${showInfo}`,
+});
 });
 
 let drawPoint = true;
 
 const drawPoints = document.getElementById('drawPoint');
 drawPoints.addEventListener('click', function() {
-    drawPoint = !drawPoint;
-    fetch('/update_drawPoint', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: `drawPoint=${drawPoint}`,
-    });
+drawPoint = !drawPoint;
+fetch('/update_drawPoint', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: `drawPoint=${drawPoint}`,
+});
 });
 
 let drawLine = false;
 
 const drawLines = document.getElementById('drawLine');
 drawLines.addEventListener('click', function() {
-    drawLine = !drawLine;
-    fetch('/update_drawLine', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: `drawLine=${drawLine}`,
-    });
+drawLine = !drawLine;
+fetch('/update_drawLine', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: `drawLine=${drawLine}`,
 });
+});
+
+//videostream in viewport
+
+function isElementInViewport(el) {
+var rect = el.getBoundingClientRect();
+return (
+    rect.top >= 0 &&
+    rect.left >= 0 &&
+    rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+    rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+);
+}
+
+function checkVideoStream() {
+var section = document.getElementById('section_4');
+var videoStream = document.getElementById('VideoStream');
+if (isElementInViewport(section)) {
+    // Section is in view, start the video stream
+    videoStream.src = "http://127.0.0.1:8000/video_feed";
+} else {
+    // Section is not in view, stop the video stream
+    videoStream.src = "";
+}
+}
+
+// Event listener for scrolling and initial check
+window.addEventListener('scroll', checkVideoStream);
+window.addEventListener('load', checkVideoStream);
 </script>
 </html>
