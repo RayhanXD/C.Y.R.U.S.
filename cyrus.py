@@ -2,13 +2,10 @@ from openai import OpenAI
 from flask_socketio import SocketIO
 from voice import voice
 import subprocess
-import socketio
 
 client = OpenAI()
 socketio = SocketIO()
 app_process = None
-
-activate = "search google chrome for youtube"
 
 def execute_command(activate):
     wraps = True

@@ -30,7 +30,7 @@ def light_switch():
         return "Limit Reached"
     
     message = "Lights turning off" if light_on else "Lights turning on"
-    voice(message)  # Call the voice function with the message
+    voice(message, True)  # Call the voice function with the message
 
     if light_on:
         turn_off_light()
@@ -80,8 +80,8 @@ def set_color():
     if request_count >= 9:
         return "Limit Reached"
     
-    colors = [(0, 0, 255), (0, 255, 0), (128, 0, 128), (227, 255, 237)]
-    color_names = ["BLUE", "GREEN", "PURPLE", "WHITE"]
+    colors = [(0, 0, 255), (0, 255, 0), (128, 0, 128), (227, 255, 237), (250,0,45)]
+    color_names = ["BLUE", "GREEN", "PURPLE", "WHITE", "HOT PINK"]
     current_color = colors[color_counter % len(colors)]
     color_name = color_names[color_counter % len(color_names)]
 
@@ -104,7 +104,8 @@ def set_color():
     light_on = True
     
     message = f"Light color changing to {color_name}"
-    voice(message)
+    voice(message, True)
     
     return f"Gesture = COLOR: {color_name}"
+
 

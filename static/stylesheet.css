@@ -37,6 +37,30 @@ nav .nav-btn {
 nav .nav-btn:hover {
     color: #E9F1F7;
 }
+#section_1 {
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, .075) 50%, rgba(0, 0, 0, 0.4) 100%);
+}
+#section_1 h1 {
+    font-size: 300%;
+    color: #944BBB;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transform: translateY(25vh);
+    margin-right: 0;
+    margin-left: 0;
+}
+#line {
+    color: white;
+}
+#section_1 h3 {
+    font-size: 200%;
+    color: #2274A5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transform: translateY(61.5vh);
+}
 svg {
     display: fixed;
     font-size: 1000%;
@@ -83,43 +107,152 @@ svg {
   stroke: #2274A5;
   animation-delay: -5s;
 }
-
 @keyframes stroke-offset{
   100% {stroke-dashoffset: -35%;}
+}
+#section_2 {
+background: linear-gradient(to bottom, rgba(0, 0, 0, .4) 0%, rgba(0, 0, 0, 0.7) 100%);
 }
 .grid-container {
     display: grid;
     grid-template-columns: auto auto;
     grid-template-rows: auto auto;
     /* border: 1px solid white; */
-    width: 99.5vw;
+    width: 96.75vw;
     height: 100vh;
     float: right;
+
 }
-#section_1 .grid-item {
+#section_2 .grid-item {
     width: auto;
     height: auto;
     background-color: transparent;
-    display: flex;
+    /* border: 1px solid white; */
     justify-content: center;
-    align-items: center;
-}
-.content {
-    background-color: white;
-    width: 600px;
-    height: 350px;
-    z-index: 5000;
+    align-content: center;
 }
 #left {
+    margin-left: auto;
     margin-right: 10px;
 }
-.low-opacity {
-    opacity: 0.2 !important;
-    transition: all .1s ease-in-out;
+#right {
+    margin-right: auto;
+    margin-left: 10px;
+}
+.top {
+    transform: translateY(17.5%);
+}
+.bottom {
+    transform: translateY(-17.5%)
+}
+.content {
+    background-color: #131b23;
+    width: 500px;
+    height: 300px;
+    z-index: 5000;
+    margin: 0;
+    padding: 30px;
+}
+.content h1 {
+    color: white;
+    font-size: 300%;
+}
+#C {
+    color: white;
 }
 
+#Y {
+    color: #AA7BC3;
+}
+
+#R {
+    color: #944BBB;
+}
+
+#U {
+    color: #2274A5;
+}
+
+#S {
+    color: #04080C;
+}
+.for {
+    color: #944BBB;
+}
+.you {
+    color: #2274A5;
+}
+.content h3 {
+    color: white;
+    font-size: 150%;
+    margin-top: 7.5%;
+}
+.maintext {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Optional: This will push the elements to the edges of the container */
+}
+#execute {
+    font-size: 200%;
+}
+#showCY {
+    width: auto;
+    height: auto;
+    font-size: 50px;
+    color: white;
+    margin-left: 5px;
+}
+#showCY.EC {
+    color: #944BBB;
+}
+#showCY.VC {
+    color: #AA7BC3;
+}
+#showCY.GR {
+    color: #2274A5;
+}
+#terminal {
+    background-color: transparent;
+    padding: 10px;
+    margin-top: 20px;
+    width: 45%;
+}
+#info {
+    display: flex;
+    align-items: center;
+}
+#info h3 {
+    text-align: right;
+    font-size: 85%;
+}
+#wave {
+    color: #944BBB;
+    font-size: 500%;
+    transform: translateY(5%);
+}
+#wave1 {
+    color: #2274A5;
+    font-size: 500%;
+    transform: translateY(5%);
+}
+#vocalInfo {
+    margin-right: 55px;
+    text-align: left !important;
+}
+#swipe {
+    font-size: 600%;
+    color: #AA7BC3;
+    margin-top: 20px;
+    margin-right: 35px;
+    padding: 25px;
+}
+
+.low-opacity {
+    opacity: 0.3 !important;
+    transition: all .1s ease-in-out;
+}
 .high-opacity {
-    opacity: 1 !important;
+    opacity: .8 !important;
     transition: all .1s ease-in-out;
 }
 .user-text {
@@ -267,7 +400,7 @@ section {
     width: 100vw;
     height: 99.9vh;
     z-index: 1;
-    background-color: black;
+    background-color: rgba(0, 0, 0, 0.7);
     border-color: white;
 }
 .sidebar {
@@ -275,7 +408,7 @@ section {
     position: relative; /* Change from absolute to relative */
     top: 0;
     right: 0;
-    height: 96%;
+    height: auto;
     width: 50px;
     z-index: 10;
     float: right;
@@ -287,6 +420,7 @@ section {
     margin-right: 1%;
     border: 1px solid #2274A5; /* Added white border */
     transition: all .1s ease-in-out;
+    transform: translateY(150%);
 }
 .sidebar:hover {
     border: 1px solid #E9F1F7; /* Added white border */

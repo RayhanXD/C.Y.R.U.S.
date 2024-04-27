@@ -3,8 +3,6 @@ from lightbars import *
 from app import *
 import threading
 from threading import Lock
-import requests
-import json
 
 last_time_called = 0
 last_time_light_called = 0
@@ -59,6 +57,7 @@ def function_for_gesture_5():
 
 def function_for_thumbsup():
     check_time_and_print('Gesture = Thumbs Up')
+    
 
 
 hand_sign_functions = {

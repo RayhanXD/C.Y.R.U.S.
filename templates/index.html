@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/static/stylesheet.css">
-    <title>Live Hand Gesture Recognition</title>
+    <title>Project C.Y.R.U.S.</title>
     <style>
     </style>
 <script src="https://cdn.tailwindcss.com"></script>
@@ -37,24 +37,73 @@
           </g>
         </svg>
     </div>
-
 <section id="section_1">
+    <h1><span id="line">&nbsp;|&nbsp;</span> WELCOME TO<span id="line">&nbsp;|&nbsp;</span></h1>
+    <h3><span id="line">&nbsp;|&nbsp;</span>CYBERNETIC RESPONSIVE UTILITY SYSTEM<span id="line">&nbsp;|&nbsp;</span></h1>
+</section>
+<section id="section_2">
     <div class="grid-container">
         <div class="grid-item">
-            <div class="content" id="left">hi lol</div>
+            <div class="content top" id="left">
+                <h1>Explore
+                    <span id="C">C</span>.<span id="Y">Y</span>.<span id="R">R</span>.<span id="U">U</span>.<span id="S">S</span>'s
+                    Capabilities...</h1>
+                    <h3>Find out what <span id="C">C</span>.<span id="Y">Y</span>.<span id="R">R</span>.<span id="U">U</span>.<span id="S">S</span> can do <span class="for">for</span> <span class="you">you</span>.</h3>
+            </div>
         </div>
         <div class="grid-item">
-            <div class="content" id="right">hi lol part two</div>
+            <div class="content top" id="right">
+                <div class="maintext">
+                    <span id="showCY" class="material-icons EC">smart_toy</span><h1 id="execute">Execute Commands</h1>
+                </div>
+                <div id="info">
+                    <img src="/static/images/zsh.png" id="terminal">
+                    <h3>In the <span id="C">C</span>.<span id="Y">Y</span>.<span id="R">R</span>.<span id="U">U</span>.<span id="S">S</span>. system, you can execute terminal 
+                        commands using your voice. By pressing the record 
+                        button and speaking, your voice is transcribed to text, 
+                        which is then processed and executed as a command 
+                        in the terminal.</h3>
+                </div>
+            </div>
         </div>
         <div class="grid-item">
-            <div class="content" id="left">hi lol part 3</div>
+            <div class="content bottom" id="left">
+                <div class="maintext">
+                    <span id="showCY"class="material-icons VC">record_voice_over</span><h1 id="execute">Vocal Conversation</h1>
+                </div>
+                <div id="info">
+                    <h3 id="vocalInfo">
+                        To have a conversation with <span id="C">C</span>.<span id="Y">Y</span>.<span id="R">R</span>.<span id="U">U</span>.<span id="S">S</span>., 
+                        you need to press the record button 
+                        on the user interface, which starts 
+                        recording your voice. After you finish 
+                        speaking, release the button and CYRUS 
+                        will process your voice command, and 
+                        respond in a conversation like manner.
+                    </h3>
+                    <span id="wave" class="material-icons">graphic_eq</span><span id="wave1" class="material-icons">graphic_eq</span>
+                </div>
+            </div>
         </div>
         <div class="grid-item">
-            <div class="content" id="right">hi lol part 4</div>
+            <div class="content bottom" id="right">
+                <div class="maintext">
+                    <span id="showCY"class="material-icons GR">waving_hand</span><h1 id="execute">Gesture Recognition</h1>
+                </div>
+                <div id="info">
+                    <span id="swipe" class="material-icons">swipe_up</span>
+                    <h3>
+                        Gesture recognition is used to identify specific hand movements, 
+                        which are then mapped to functions that control light settings, 
+                        such as toggling the light on/off or changing its color. This 
+                        allows you to interact with the program and control its 
+                        behavior using hand gestures.
+                    </h3>
+                </div>
+            </div>
         </div>
     </div>
 </section>
-<section id="section_2"></section>
 
 <section id="section_3">
     <div class="chat-container">
@@ -74,6 +123,8 @@
     </div>
     <ul class="cyrusbar">
         <li><button id="cyrusbutton" class="voiceoptions"><span class="material-icons">smart_toy</span></button></li>
+        <li><button id="cyrusbutton" class="voiceoptions light"><span class="material-icons">lightbulb</span></button></li>
+        <li><button id="cyrusbutton" class="voiceoptions mail"><span class="material-icons">mail</span></button></li>
     </ul>
 </section>
 <section id="section_4">
@@ -186,6 +237,23 @@ function stopCyrusRecording() {
     mediaRecorder.stop();
 }
 
+function stopLightRecording() {
+    addChatbotDiv();
+    mediaRecorder.addEventListener('stop', function() {
+        const audioBlob = new Blob(recordedChunks);
+        const formData = new FormData();
+        formData.append('file', audioBlob);
+        fetch('/light', {
+            method:'POST',
+            body: formData
+        })
+        .then(data => {
+            //addPlaceholderDivs();
+        })
+    });
+    mediaRecorder.stop();
+}
+
 function addUserDiv() {
     const messageDiv = document.createElement('div');
     messageDiv.className = 'message chat-exchange';
@@ -238,6 +306,22 @@ if(mediaRecorder && mediaRecorder.state == 'recording') {
 } else {
     startRecording();
     cyrusButton.classList.add('recording');
+}
+svgText.classList.remove('high-opacity');
+svgText.classList.add('low-opacity');
+});
+
+//light record button
+
+const lightButton = document.getElementsByClassName('light')[0];
+
+lightButton.addEventListener('click', function() {
+if(mediaRecorder && mediaRecorder.state == 'recording') {
+    stopLightRecording();
+    lightButton.classList.remove('recording');
+} else {
+    startRecording();
+    lightButton.classList.add('recording');
 }
 svgText.classList.remove('high-opacity');
 svgText.classList.add('low-opacity');
@@ -304,13 +388,15 @@ fetch('/update_drawLine', {
 //videostream in viewport
 
 function isElementInViewport(el) {
-var rect = el.getBoundingClientRect();
-return (
-    rect.top >= 0 &&
-    rect.left >= 0 &&
-    rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-    rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-);
+    var rect = el.getBoundingClientRect();
+    var windowHeight = (window.innerHeight || document.documentElement.clientHeight);
+    var windowWidth = (window.innerWidth || document.documentElement.clientWidth);
+
+    // Check if at least 50% of the element is in the viewport
+    var vertInView = (rect.top <= windowHeight) && ((rect.top + rect.height/2) >= 0);
+    var horInView = (rect.left <= windowWidth) && ((rect.left + rect.width/2) >= 0);
+
+    return (vertInView && horInView);
 }
 
 function checkVideoStream() {

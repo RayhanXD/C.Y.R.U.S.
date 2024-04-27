@@ -1,7 +1,9 @@
 from flask import Flask, Response, request, render_template
 from flask_socketio import SocketIO
 from dotenv import load_dotenv
+from lightbars import *
 from cyrus import *
+from custom_lights import light_function
 import requests
 from openai import OpenAI
 import os
@@ -32,6 +34,22 @@ client = OpenAI()
 
 load_dotenv()
 api_key = os.getenv('OPENAI_API_KEY')
+
+def userVoice():
+    audio_file = request.files['file']
+    audio_file.save('audio.webm')
+
+    with open('audio.webm', 'rb') as f:
+        response = requests.post(
+            "https://api.openai.com/v1/audio/transcriptions",
+            headers={"Authorization": f"Bearer {api_key}"},
+            files={"file": f},
+            data={"model": "whisper-1"}
+        )
+    transcript = response.json()
+    socketio.emit('user_text', {'data': transcript['text']})
+
+    return transcript
 
 app.config['UPLOAD_FOLDER'] = '/Users/rayhanmohammad/Desktop/GRWebTesting'
 socketio = SocketIO(app)
@@ -73,9 +91,7 @@ def upload():
     )
 
     socketio.emit('user_text', {'data': transcript['text']})
-    # voice(chat_response, False)
 
-    lolol = ""
 
     for chunk in chat_response:
         if chunk.choices[0].delta.content is not None:
@@ -85,23 +101,45 @@ def upload():
 
 @app.route('/cyrus', methods=['POST'])
 def cyrus():
-    audio_file = request.files['file']
-    audio_file.save('audio.webm')
-
-    with open('audio.webm', 'rb') as f:
-        response = requests.post(
-            "https://api.openai.com/v1/audio/transcriptions",
-            headers={"Authorization": f"Bearer {api_key}"},
-            files={"file": f},
-            data={"model": "whisper-1"}
-        )
-    transcript = response.json()
-    socketio.emit('user_text', {'data': transcript['text']})
     
+    transcript = userVoice()
+
     feedback = execute_command(transcript)
     socketio.emit('chatbot_text', {'data': feedback})
 
     return '', 200
+
+@app.route('/light', methods=['POST'])
+def lightcontrol():
+
+    transcript = userVoice()
+    command = transcript['text']
+    
+    feedback = light_function(command)
+    socketio.emit('chatbot_text', {'data': feedback})
+
+    return '', 200
+    
+@app.route('/silent', method=['POST'])
+def zapierWorkflow():
+    # Your Zapier webhook URL
+    webhook_url = 'https://hooks.zapier.com/hooks/catch/18087776/3njjmbi/'
+
+    # Data you want to send
+    data = {
+        'recipient': 'backup7867rm@gmail.com',
+        'subject': 'Hello from Your AI Assistant',
+        'body': 'Here is the information you requested...'
+    }
+
+    # Make a POST request
+    response = requests.post(webhook_url, json=data)
+
+    # Check response status
+    if response.status_code == 200:
+        print('Data sent successfully')
+    else:
+        print('Failed to send data: Status code', response.status_code)
 
 @app.route('/update_showBrect', methods=['POST'])
 def update_showBrect():

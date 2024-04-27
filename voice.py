@@ -1,16 +1,15 @@
 from openai import OpenAI
 from playsound import playsound
+from itertools import cycle
 
 client = OpenAI()
 
-counter = 0
-strings = ['Of course, Rayhan, ', 'Okay, Rayhan, ', '']
+strings = ['Of course, Rayhan. ', 'Okay, Rayhan. ', '']
 
 def cycle_strings():
-    global counter
-    result = strings[counter % len(strings)]
-    counter += 1
-    return result
+    return next(cycled_strings)
+    
+cycled_strings = cycle(strings)
 
 embed = True
 
