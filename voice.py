@@ -1,8 +1,9 @@
-from openai import OpenAI
+import openai
 from playsound import playsound
 from itertools import cycle
 
-client = OpenAI()
+# client = OpenAI()
+api_key = "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"
 
 strings = ['Of course, Rayhan. ', 'Okay, Rayhan. ', '']
 
@@ -20,7 +21,7 @@ def voice(input, embed):
     else:
         input = input
 
-    response = client.audio.speech.create(
+    response = openai.audio.speech.create(
         model="tts-1",
         voice="nova",
         input= input,

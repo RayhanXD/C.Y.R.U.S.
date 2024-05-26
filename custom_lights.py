@@ -9,8 +9,10 @@ client = Groq(
 key = '3c42ae12-da77-4165-8ff7-29a3227bd666'
 ID = 'F2:7B:CC:35:34:37:68:14'
 sku = 'H6056'
+
 with open('reference/govee.txt', 'r') as file:
         data = file.read()
+
 func = """
 
 import requests

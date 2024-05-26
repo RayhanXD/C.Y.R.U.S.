@@ -254,6 +254,23 @@ function stopLightRecording() {
     mediaRecorder.stop();
 }
 
+function stopSilentRecording() {
+    addChatbotDiv();
+    mediaRecorder.addEventListener('stop', function() {
+        const audioBlob = new Blob(recordedChunks);
+        const formData = new FormData();
+        formData.append('file', audioBlob);
+        fetch('/silent', {
+            method:'POST',
+            body: formData
+        })
+        .then(data => {
+            //addPlaceholderDivs();
+        })
+    });
+    mediaRecorder.stop();
+}
+
 function addUserDiv() {
     const messageDiv = document.createElement('div');
     messageDiv.className = 'message chat-exchange';

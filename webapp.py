@@ -2,10 +2,11 @@ from flask import Flask, Response, request, render_template
 from flask_socketio import SocketIO
 from dotenv import load_dotenv
 from lightbars import *
+from setupEmail import sendEmail
 from cyrus import *
 from custom_lights import light_function
 import requests
-from openai import OpenAI
+import openai
 import os
 import cv2 as cv
 from app import process_frame, showBrect, showInfo, drawLine, drawPoint
@@ -30,7 +31,6 @@ def generate():
 def video():
     return Response(generate(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
-client = OpenAI()
 
 load_dotenv()
 api_key = os.getenv('OPENAI_API_KEY')
@@ -74,7 +74,7 @@ def upload():
     transcript = response.json()
 
     # Send the transcribed text to the ChatCompletion API
-    chat_response = client.chat.completions.create(
+    chat_response = openai.chat.completions.create(
         model="gpt-4",
         messages=[
             {
@@ -120,26 +120,18 @@ def lightcontrol():
 
     return '', 200
     
-@app.route('/silent', method=['POST'])
+@app.route('/silent', methods=['POST'])
 def zapierWorkflow():
-    # Your Zapier webhook URL
-    webhook_url = 'https://hooks.zapier.com/hooks/catch/18087776/3njjmbi/'
 
-    # Data you want to send
-    data = {
-        'recipient': 'backup7867rm@gmail.com',
-        'subject': 'Hello from Your AI Assistant',
-        'body': 'Here is the information you requested...'
-    }
+    transcript = userVoice()
+    chatbot = sendEmail(transcript)
 
-    # Make a POST request
-    response = requests.post(webhook_url, json=data)
-
-    # Check response status
-    if response.status_code == 200:
-        print('Data sent successfully')
+    if chatbot == 200:
+        socketio.emit('chatbot_text', {'data': "Email Sent Successfully"})
     else:
-        print('Failed to send data: Status code', response.status_code)
+        socketio.emit('chatbot_text', {'data': "Error sending email, check webhook configuration."})
+
+    return '', 200
 
 @app.route('/update_showBrect', methods=['POST'])
 def update_showBrect():

@@ -1,15 +1,14 @@
-from openai import OpenAI
+import openai
 from flask_socketio import SocketIO
 from voice import voice
 import subprocess
 
-client = OpenAI()
 socketio = SocketIO()
 app_process = None
 
 def execute_command(activate):
     wraps = True
-    chat_response = client.chat.completions.create(
+    chat_response = openai.chat.completions.create(
         model="gpt-4",
         messages=[
             {
@@ -30,7 +29,7 @@ def execute_command(activate):
         code = "Invalid Command, try something else?"
         wraps = False
     
-    vocal_response = client.chat.completions.create(
+    vocal_response = openai.chat.completions.create(
         model="gpt-4",
         messages=[
             {
