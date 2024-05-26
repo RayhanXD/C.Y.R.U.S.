@@ -1,9 +1,12 @@
 import openai
 from playsound import playsound
 from itertools import cycle
+from dotenv import load_dotenv
+import os
 
 # client = OpenAI()
-api_key = "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"
+load_dotenv()
+api_key = os.getenv('OPENAI_API_KEY')
 
 strings = ['Of course, Rayhan. ', 'Okay, Rayhan. ', '']
 
