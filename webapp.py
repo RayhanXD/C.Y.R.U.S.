@@ -8,6 +8,9 @@ import os
 import cv2 as cv
 from app import process_frame, showBrect, showInfo, drawLine, drawPoint
 
+# Load environment variables from .env file
+load_dotenv()
+
 app = Flask(__name__)
 
 def generate():
@@ -28,10 +31,7 @@ def generate():
 def video():
     return Response(generate(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
-client = OpenAI()
-
-load_dotenv()
-api_key = os.getenv('OPENAI_API_KEY')
+client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 
 app.config['UPLOAD_FOLDER'] = '/Users/rayhanmohammad/Desktop/GRWebTesting'
 socketio = SocketIO(app)

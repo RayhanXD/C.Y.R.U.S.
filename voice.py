@@ -1,7 +1,12 @@
 from openai import OpenAI
 from playsound import playsound
+from dotenv import load_dotenv
+import os
 
-client = OpenAI()
+# Load environment variables from .env file
+load_dotenv()
+
+client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 
 counter = 0
 strings = ['Of course, Rayhan, ', 'Okay, Rayhan, ', '']
